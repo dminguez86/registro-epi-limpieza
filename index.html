@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0d0d0d" />
+<title>Registro de entrega de EPI's · CLUMTEL PREMIUM, SL · PREVIJOB</title>
+<style>
+:root{--cyan:#4ba3c7;--green:#7ac143;--dark:#0d0d0d;--g900:#1a1d23;--g700:#3d4450;--g500:#6b7280;--g300:#d1d5db;--g200:#e5e7eb;--g100:#f3f4f6;--red:#b91c1c;--r:10px;--font:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--font);font-size:16px;line-height:1.5;color:var(--g900);background:linear-gradient(125deg,#f8fcfd,#eaf7fb 52%,#f0f8e9) fixed;-webkit-font-smoothing:antialiased}
+header{background:linear-gradient(135deg,#0d0d0d,#1a1a1a);color:#fff;padding:1rem;border-bottom:3px solid var(--green)}
+.wrap{max-width:860px;margin:0 auto}
+header img{display:block;max-height:58px;margin-bottom:.6rem;background:#fff;padding:6px 10px;border-radius:6px}
+header h1{margin:0;font-size:1.4rem}
+header p{margin:.15rem 0 0;font-size:.85rem;opacity:.85}
+main{max-width:860px;margin:0 auto;padding:1rem 1rem 7rem}
+section{background:#fff;border-radius:var(--r);box-shadow:0 1px 3px rgba(0,0,0,.08),0 6px 18px rgba(36,125,157,.1);margin-bottom:1rem;overflow:hidden}
+section>h2{margin:0;background:var(--dark);color:#fff;font-size:.82rem;letter-spacing:.03em;text-transform:uppercase;padding:.6rem 1rem;border-left:5px solid var(--green);font-weight:700}
+section>h2 small{display:block;text-transform:none;font-weight:400;opacity:.8;letter-spacing:0;font-size:.75rem;margin-top:.1rem}
+.body{padding:1rem}
+.grid{display:grid;gap:.8rem;grid-template-columns:1fr 1fr}
+.grid .full{grid-column:1/-1}
+@media(max-width:620px){.grid{grid-template-columns:1fr}}
+label.f{display:block;font-size:.8rem;font-weight:600;color:var(--g700)}
+label.f span.req{color:var(--red)}
+input[type=text],input[type=number],input[type=date],input[type=email]{width:100%;margin-top:.2rem;padding:.6rem .7rem;min-height:44px;font:inherit;border:1px solid var(--g300);border-radius:8px;background:#fff;color:var(--g900)}
+input[readonly]{background:var(--g100);color:var(--g700)}
+input:focus{outline:2px solid var(--cyan);border-color:var(--cyan)}
+.invalid{border-color:var(--red)!important;background:#fff5f5}
+.epi{border:1px solid var(--g200);border-radius:8px;background:#fafcfd;margin-bottom:.6rem;overflow:hidden}
+.epi:has(.ent:checked){background:#eef8e6;border-color:var(--green)}
+.epi .top{display:flex;gap:.65rem;align-items:flex-start;padding:.7rem;cursor:pointer;font-size:.95rem;font-weight:600}
+.epi .top input{width:24px;height:24px;flex:0 0 24px;margin:0;accent-color:var(--green)}
+.epi .top small{display:block;font-weight:400;color:var(--g500);font-size:.75rem}
+.epi .det{display:none;grid-template-columns:80px 1fr 1fr;gap:.6rem;padding:0 .7rem .7rem}
+.epi:has(.ent:checked) .det{display:grid}
+@media(max-width:620px){.epi .det{grid-template-columns:1fr 1fr}.epi .det .mot{grid-column:1/-1;order:-1}}
+.epi .det label{font-size:.72rem}
+.epis.invalid{outline:2px solid var(--red);border-radius:8px}
+.legal p{margin:0 0 .6rem;font-size:.9rem;color:var(--g700)}
+.legal p.it{font-style:italic;color:#1f7aa0}
+.sigs{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:700px){.sigs{grid-template-columns:1fr}}
+.sig canvas{width:100%;height:170px;border:1px dashed var(--g500);border-radius:8px;background:#fff;touch-action:none;display:block}
+.sig canvas.invalid{border:2px solid var(--red)}
+.sig .hd{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;margin-bottom:.3rem}
+.sig .hd button{font-size:.75rem;padding:.25rem .6rem;min-height:30px}
+.sig input{margin-top:.4rem}
+.note{font-size:.8rem;color:var(--g500);margin:.4rem 0 0}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--g300);background:#fff;padding:.5rem .9rem;min-height:44px;font-weight:600;color:var(--g900)}
+button:hover{background:var(--g100)}
+button.primary{background:var(--dark);color:#fff;border-color:var(--dark);border-bottom:3px solid var(--green)}
+button.primary:hover{background:#222}
+button:disabled{opacity:.6;cursor:default}
+.bar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:3px solid var(--green);box-shadow:0 -4px 16px rgba(0,0,0,.12);padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom));z-index:10}
+.bar .wrap{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.bar .grp{display:flex;gap:.5rem;flex-wrap:wrap}
+#status{font-size:.75rem;color:var(--g500)}
+@media(max-width:620px){main{padding-bottom:10rem}.bar .wrap{flex-direction:column;align-items:stretch;gap:.4rem}.bar .grp{width:100%}.bar .grp button{flex:1;min-height:40px;padding:.4rem .5rem}#status{display:none}}
+#toast{position:fixed;left:50%;bottom:5.5rem;transform:translateX(-50%);background:#111;color:#fff;padding:.7rem 1.1rem;border-radius:10px;font-size:.9rem;max-width:90vw;display:none;z-index:20;text-align:center}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <img src="logo-previjob.png" alt="PREVIJOB Servicio de Prevención" />
+  <h1>Registro de entrega de EPI's</h1>
+  <p>CLUMTEL PREMIUM, SL · Personal de limpieza de habitaciones</p>
+</div></header>
+
+<main>
+<form id="f" autocomplete="off" novalidate>
+
+<section><h2>Datos de la entrega</h2><div class="body"><div class="grid">
+  <label class="f full">Empresa<input type="text" id="empresa" value="CLUMTEL PREMIUM, SL" readonly /></label>
+  <label class="f full">Puesto de trabajo<input type="text" id="puesto" value="Personal de limpieza de habitaciones" readonly /></label>
+  <label class="f">Trabajador/a (nombre y apellidos) <span class="req">*</span><input type="text" id="trabajador" required autocomplete="name" /></label>
+  <label class="f">DNI / NIE <span class="req">*</span><input type="text" id="dni" required autocapitalize="characters" /></label>
+  <label class="f">Fecha <span class="req">*</span><input type="date" id="fecha" required /></label>
+  <label class="f">Hotel / centro donde se entrega <span class="req">*</span><input type="text" id="hotel" required placeholder="Nombre del hotel y localidad" /></label>
+</div></div></section>
+
+<section><h2>Equipos de protección individual del puesto<small>Marca «Entregado» solo en los equipos que se entregan ahora. Los no marcados no aparecerán en el certificado.</small></h2><div class="body">
+  <div class="epis" id="epis"></div>
+</div></section>
+
+<section><h2>Información y compromiso</h2><div class="body legal">
+  <p>Según lo establecido en el Art. 17 de la Ley de prevención de riesgos laborales, la empresa entrega al trabajador arriba mencionado los siguientes equipos de protección individual, para su uso individual en las actividades que desempeña en su puesto de trabajo.</p>
+  <p class="it">He recibido instrucciones, información y formación precisas y necesarias para el correcto uso y mantenimiento de los equipos de protección individual que me han entregado.</p>
+  <p class="it">En cumplimiento a lo establecido en el Art. 29 de la Ley de prevención de riesgos laborales y el RD 773/1997 sobre equipos de protección individual, me comprometo a utilizar y mantener los adecuadamente los equipos de protección individual que me han entregado.</p>
+</div></section>
+
+<section><h2>Firmas</h2><div class="body"><div class="sigs">
+  <div class="sig"><div class="hd"><span>TRABAJADOR/A <span style="color:var(--red)">*</span></span><button type="button" data-clear="trab">Borrar</button></div>
+    <canvas id="sig_trab"></canvas>
+    <p class="note">Firma con el dedo en el recuadro.</p></div>
+  <div class="sig"><div class="hd"><span>EMPRESA · Firma y sello (opcional)</span><button type="button" data-clear="emp">Borrar</button></div>
+    <canvas id="sig_emp"></canvas>
+    <input type="text" id="rep_nombre" placeholder="Nombre del representante de la empresa (opcional)" />
+    <input type="text" id="rep_dni" placeholder="DNI del representante (opcional)" autocapitalize="characters" /></div>
+</div></div></section>
+
+<section><h2>Envío del certificado</h2><div class="body">
+  <p class="note" style="margin-top:0">Al pulsar «Firmar y enviar certificado» se genera el certificado de entrega en PDF y se envía automáticamente por correo a la empresa.</p>
+  <label class="f" style="margin-top:.6rem">Tu correo para recibir una copia (opcional)<input type="email" id="copia" inputmode="email" autocomplete="email" placeholder="nombre@correo.com" /></label>
+</div></section>
+
+</form>
+</main>
+
+<div class="bar"><div class="wrap">
+  <div class="grp"><button type="button" id="nuevo">Nuevo registro</button><span id="status"></span></div>
+  <div class="grp"><button type="button" id="btnPdf">Descargar PDF</button><button type="button" class="primary" id="btnSend">Firmar y enviar certificado</button></div>
+</div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="jspdf.umd.min.js"></script>
+<script>
+/* ---------- Configuración ---------- */
+const API_URL = "https://registro-epi-limpieza-api.onrender.com/api/enviar";
+const EMPRESA = "CLUMTEL PREMIUM, SL";
+const PUESTO = "Personal de limpieza de habitaciones";
+const EPIS = [
+  ["Calzado de trabajo antideslizante, (UNE-EN ISO 20347)", "Caídas al mismo nivel (suelos mojados o resbaladizos)"],
+  ["Gafas de protección riesgo químico (UNE-EN 166:2002)", "Salpicaduras de productos químicos"],
+  ["Guantes según especificaciones de la ficha de seguridad de productos químicos (UNE-EN 374-1/2/3)", "Contacto con productos químicos"],
+  ["Mascarilla o máscara con filtro según características de la ficha de seguridad (UNE-EN14387/UNE-EN143)", "Inhalación de productos químicos"],
+  ["Guantes de nitrilo", "Contacto con productos químicos y riesgo biológico"],
+  ["Mascarilla anti-polvo con nivel de protección FFP2.", "Inhalación de polvo"],
+  ["Ropa de protección contra riesgo biológico.", "Riesgo biológico"]
+];
+
+/* ---------- Utilidades ---------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KEY = "previjob-epi-limpieza-borrador-v1";
+function toast(m,ms=3500){const t=$("toast");t.textContent=m;t.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>t.style.display="none",ms)}
+const today = () => { const d=new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
+const fmtDate = iso => iso ? iso.split("-").reverse().join("/") : "";
+
+/* ---------- EPI ---------- */
+$("epis").innerHTML = EPIS.map(([n,m],i)=>`<div class="epi">
+  <label class="top"><input type="checkbox" class="ent" id="ent_${i}"><span>${esc(n)}<small>Marca si se entrega</small></span></label>
+  <div class="det">
+    <label class="f">Uds<input type="number" id="uds_${i}" min="1" max="99" value="1" inputmode="numeric"></label>
+    <label class="f mot">Motivo<input type="text" id="mot_${i}" value="${esc(m)}"></label>
+    <label class="f">Fecha reposición<input type="text" id="rep_${i}" value="Por deterioro" placeholder="dd/mm/aaaa o «Por deterioro»"></label>
+  </div></div>`).join("");
+
+/* ---------- Firma en canvas ---------- */
+const pads={};
+function initPad(k){
+  const c=$("sig_"+k), ctx=c.getContext("2d"); let draw=false,last=null; const p={c,ctx,empty:true};
+  function setup(){ ctx.lineWidth=2.4; ctx.lineCap="round"; ctx.lineJoin="round"; ctx.strokeStyle="#111"; }
+  p.size=()=>{ const keep=p.empty?null:c.toDataURL(); const r=c.getBoundingClientRect(), ratio=Math.max(window.devicePixelRatio||1,1);
+    c.width=Math.round(r.width*ratio); c.height=Math.round(r.height*ratio); ctx.setTransform(ratio,0,0,ratio,0,0); setup();
+    if(keep){const im=new Image(); im.onload=()=>ctx.drawImage(im,0,0,r.width,r.height); im.src=keep;} };
+  p.clear=()=>{ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,c.width,c.height);ctx.restore();p.empty=true;};
+  const pos=e=>{const r=c.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}};
+  c.addEventListener("pointerdown",e=>{e.preventDefault();c.setPointerCapture(e.pointerId);draw=true;last=pos(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(last.x+.01,last.y);ctx.stroke();p.empty=false;c.classList.remove("invalid")});
+  c.addEventListener("pointermove",e=>{if(!draw)return;e.preventDefault();const q=pos(e);ctx.beginPath();ctx.moveTo(last.x,last.y);ctx.lineTo(q.x,q.y);ctx.stroke();last=q});
+  const end=()=>{draw=false}; c.addEventListener("pointerup",end); c.addEventListener("pointercancel",end);
+  p.size(); pads[k]=p;
+}
+["trab","emp"].forEach(initPad);
+document.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>pads[b.dataset.clear].clear());
+let rz; window.addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>Object.values(pads).forEach(p=>p.size()),200)});
+
+/* ---------- Estado (borrador de texto, sin firmas) ---------- */
+const TEXT_IDS=["trabajador","dni","fecha","hotel","rep_nombre","rep_dni","copia"];
+function collect(){
+  const d={}; TEXT_IDS.forEach(i=>d[i]=$(i).value.trim());
+  d.dni=d.dni.toUpperCase(); d.rep_dni=d.rep_dni.toUpperCase();
+  d.epis=EPIS.map(([n],i)=>({n,ent:$("ent_"+i).checked,uds:$("uds_"+i).value,mot:$("mot_"+i).value.trim(),rep:$("rep_"+i).value.trim()}));
+  d.sigTrab=pads.trab.empty?null:pads.trab.c.toDataURL("image/png");
+  d.sigEmp=pads.emp.empty?null:pads.emp.c.toDataURL("image/png");
+  return d;
+}
+function save(){ try{ const d=collect(); delete d.sigTrab; delete d.sigEmp; localStorage.setItem(KEY,JSON.stringify(d)); $("status").textContent="Borrador guardado"; }catch{} }
+function restore(d){ TEXT_IDS.forEach(i=>{ if(d[i]!=null) $(i).value=d[i]; }); (d.epis||[]).forEach((e,i)=>{ if(!$("ent_"+i))return; $("ent_"+i).checked=!!e.ent; $("uds_"+i).value=e.uds||1; $("mot_"+i).value=e.mot??EPIS[i][1]; $("rep_"+i).value=e.rep??"Por deterioro"; }); }
+let st; $("f").addEventListener("input",()=>{clearTimeout(st);st=setTimeout(save,400)});
+$("f").addEventListener("change",save);
+function fresh(keepHotel){ const hotel=$("hotel").value, rn=$("rep_nombre").value, rd=$("rep_dni").value;
+  localStorage.removeItem(KEY); $("f").reset(); Object.values(pads).forEach(p=>p.clear());
+  EPIS.forEach(([n,m],i)=>{ $("ent_"+i).checked=false; $("uds_"+i).value=1; $("mot_"+i).value=m; $("rep_"+i).value="Por deterioro"; });
+  $("fecha").value=today(); if(keepHotel){ $("hotel").value=hotel; $("rep_nombre").value=rn; $("rep_dni").value=rd; save(); } $("status").textContent=""; document.querySelectorAll(".invalid").forEach(x=>x.classList.remove("invalid")); window.scrollTo(0,0); }
+$("nuevo").onclick=()=>{ if(confirm("¿Empezar un nuevo registro? Se borrarán los datos actuales.")) fresh(false); };
+try{ const s=localStorage.getItem(KEY); if(s) restore(JSON.parse(s)); }catch{}
+if(!$("fecha").value) $("fecha").value=today();
+
+/* ---------- Validación ---------- */
+function validate(){
+  let first=null; const mark=(el,bad)=>{ el.classList.toggle("invalid",bad); if(bad&&!first) first=el; };
+  ["trabajador","dni","fecha","hotel"].forEach(i=>mark($(i),!$(i).value.trim()));
+  const any=EPIS.some((_,i)=>$("ent_"+i).checked); mark($("epis"),!any);
+  EPIS.forEach((_,i)=>{ const u=$("uds_"+i); mark(u,$("ent_"+i).checked && !(+u.value>=1)); });
+  mark(pads.trab.c,pads.trab.empty);
+  const cp=$("copia"); mark(cp,!!cp.value.trim() && !cp.checkValidity());
+  if(first){ first.scrollIntoView({behavior:"smooth",block:"center"});
+    toast(!any?"Marca al menos un equipo como entregado.":pads.trab.empty&&first===pads.trab.c?"Falta la firma del trabajador/a.":"Revisa los campos marcados en rojo."); return false; }
+  return true;
+}
+
+/* ---------- PDF ---------- */
+function loadImg(src){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=src; }); }
+async function trimSig(url){ // recorta márgenes en blanco de la firma
+  const im=await loadImg(url), c=document.createElement("canvas"); c.width=im.width; c.height=im.height; const x=c.getContext("2d"); x.drawImage(im,0,0);
+  const px=x.getImageData(0,0,c.width,c.height).data; let a=c.width,b=c.height,e=-1,f=-1;
+  for(let y=0;y<c.height;y++) for(let xx=0;xx<c.width;xx++) if(px[(y*c.width+xx)*4+3]>10){ if(xx<a)a=xx; if(xx>e)e=xx; if(y<b)b=y; if(y>f)f=y; }
+  if(e<0) return null; const p=6; a=Math.max(0,a-p); b=Math.max(0,b-p); e=Math.min(c.width-1,e+p); f=Math.min(c.height-1,f+p);
+  const o=document.createElement("canvas"); o.width=e-a+1; o.height=f-b+1; o.getContext("2d").drawImage(c,a,b,o.width,o.height,0,0,o.width,o.height);
+  return {src:o.toDataURL("image/png"),w:o.width,h:o.height};
+}
+const fileName = d => `Entrega_EPI_${(d.trabajador||"trabajador").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\w]+/g,"_").replace(/^_|_$/g,"")}_${d.fecha||today()}.pdf`;
+let logoImg=null;
+async function makePdf(d){
+  const { jsPDF } = window.jspdf; const doc=new jsPDF({unit:"mm",format:"a4"});
+  const PW=210, PH=297, M=20, W=PW-2*M, CY=[24,159,211], GR=[43,178,76], TXT=[31,122,160];
+  const setF=(s,st="normal")=>{doc.setFont("helvetica",st);doc.setFontSize(s)};
+  const box=(x,y,w,h)=>{doc.setDrawColor(...CY);doc.setLineWidth(.3);doc.rect(x,y,w,h)};
+  const clean=s=>String(s??"").replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/[\u2013\u2014]/g,"-").replace(/[^\x00-\xFF€]/g,"");
+  function frame(){ // bandas superior e inferior como la plantilla
+    doc.setFillColor(...CY); doc.rect(0,0,PW,16,"F");
+    doc.setFillColor(...GR); doc.rect(PW-24,0,24,16,"F"); doc.triangle(PW-24,0,PW-24,16,PW-27,16,"F");
+    doc.setDrawColor(255); doc.setLineWidth(1.1); doc.line(PW-24.9,0,PW-27.9,16);
+    doc.setFillColor(...GR); doc.rect(0,PH-11,PW,11,"F"); doc.setTextColor(255); setF(10); doc.text("Documento cedido por  PREVIJOB SL",PW-M,PH-4,{align:"right"});
+  }
+  frame();
+  if(!logoImg) logoImg=await loadImg("logo-previjob.png");
+  doc.addImage(logoImg,"PNG",M,19,26,26*logoImg.height/logoImg.width);
+  let y=32;
+  // Título
+  doc.setFillColor(...CY); doc.rect(M,y,W,13,"F"); doc.setTextColor(255); setF(11,"bold");
+  doc.text("REGISTRO DE ENTREGA DE",PW/2,y+5.3,{align:"center"}); doc.text("EQUIPOS DE PROTECCION INDIVIDUAL",PW/2,y+10.6,{align:"center"});
+  y+=15.5;
+  // Datos
+  const rh=6.2, lw=38, rw=W-lw, l2=24, v2=42;
+  const lab=(t,x,yy,w,it)=>{ doc.setFillColor(...CY); doc.rect(x,yy,w,rh,"F"); box(x,yy,w,rh); doc.setTextColor(255); setF(8,it?"bolditalic":"bold"); doc.text(t,x+1.5,yy+4.2); };
+  const val=(t,x,yy,w)=>{ box(x,yy,w,rh); doc.setTextColor(20); setF(8.8); doc.text(doc.splitTextToSize(clean(t),w-3)[0]||"",x+1.5,yy+4.3); };
+  lab("Empresa:",M,y,lw); val(EMPRESA,M+lw,y,rw); y+=rh;
+  lab("Trabajador:",M,y,lw); val(d.trabajador,M+lw,y,rw-l2-v2); lab("DNI:",M+W-l2-v2,y,l2,1); val(d.dni,M+W-v2,y,v2); y+=rh;
+  lab("Puesto de trabajo:",M,y,lw); val(PUESTO,M+lw,y,rw-l2-v2); lab("Fecha:",M+W-l2-v2,y,l2,1); val(fmtDate(d.fecha),M+W-v2,y,v2); y+=rh;
+  lab("Hotel / centro:",M,y,lw); val(d.hotel,M+lw,y,rw); y+=rh;
+  y+=6;
+  // Art. 17
+  doc.setTextColor(...TXT); setF(9);
+  const p17="Según lo establecido en el Art. 17 de la Ley de prevención de riesgos laborales, la empresa entrega al trabajador arriba mencionado los siguientes equipos de protección individual, para su uso individual en las actividades que desempeña en su puesto de trabajo:";
+  doc.text(p17,M+3,y,{maxWidth:W-6,align:"justify",lineHeightFactor:1.55}); y+=doc.splitTextToSize(p17,W-6).length*9*0.3528*1.55+1;
+  // Tabla de EPI
+  const cols=[["EPI",W*0.44],["Motivo",W*0.25],["Fecha reposición",W*0.19],["Uds",W*0.12]];
+  doc.setFillColor(...CY); doc.rect(M,y,W,5.5,"F"); doc.setTextColor(255); setF(8,"bold"); doc.text("EPIS ENTREGADOS AL TRABAJADOR",M+1.5,y+3.9); y+=5.5;
+  doc.setFillColor(...CY); doc.rect(M,y,W,5.5,"F"); setF(7.6); let x=M;
+  cols.forEach(([t,w],i)=>{ doc.text(t,i===0?x+1.5:x+w/2,y+3.8,{align:i===0?"left":"center"}); if(i) {doc.setDrawColor(255);doc.line(x,y,x,y+5.5);} x+=w; }); y+=5.5;
+  const rows=d.epis.filter(e=>e.ent);
+  setF(8.4); doc.setTextColor(20);
+  for(const e of rows){
+    const cells=[doc.splitTextToSize(clean(e.n),cols[0][1]-3),doc.splitTextToSize(clean(e.mot),cols[1][1]-3),doc.splitTextToSize(clean(e.rep),cols[2][1]-3),[String(e.uds||1)]];
+    const h=Math.max(6.2,Math.max(...cells.map(c=>c.length))*3.6+2.6);
+    if(y+h>PH-110){ doc.addPage(); frame(); y=26; setF(8.4); doc.setTextColor(20); }
+    x=M; cells.forEach((c,i)=>{ const w=cols[i][1]; box(x,y,w,h); doc.text(c,i===0?x+1.5:x+w/2,y+(h-c.length*3.6)/2+2.7,{align:i===0?"left":"center",lineHeightFactor:1.2}); x+=w; });
+    y+=h;
+  }
+  y+=6;
+  // Textos de compromiso
+  doc.setTextColor(...TXT); setF(8.6,"italic");
+  const pc="He recibido instrucciones, información y formación precisas y necesarias para el correcto uso y mantenimiento de los equipos de protección individual que me han entregado.\nEn cumplimiento a lo establecido en el Art. 29 de la Ley de prevención de riesgos laborales y el RD 773/1997 sobre equipos de protección individual, me comprometo a utilizar y mantener los adecuadamente los equipos de protección individual que me han entregado.";
+  const pl=doc.splitTextToSize(pc,W); doc.text(pl,M,y); y+=pl.length*8.6*0.3528*1.15+6;
+  // Firmas
+  const bw=(W-12)/2, sh=26, sigs=[await (d.sigEmp?trimSig(d.sigEmp):null), await (d.sigTrab?trimSig(d.sigTrab):null)];
+  if(y+rh*3+sh>PH-16){ doc.addPage(); frame(); y=26; }
+  const blocks=[
+    {x:M, top:["Empresa:",EMPRESA], sl:"Firma y\nsello.:", name:d.rep_nombre, dni:d.rep_dni, sig:sigs[0]},
+    {x:M+bw+12, top:["Trabajador:",d.trabajador], sl:"Firma:", name:"", dni:d.dni, sig:sigs[1]}
+  ];
+  for(const b of blocks){
+    let yy=y; const lw2=21;
+    lab(b.top[0],b.x,yy,lw2); val(b.top[1],b.x+lw2,yy,bw-lw2); yy+=rh;
+    box(b.x,yy,bw,sh); doc.setFillColor(...CY); const sl=b.sl.split("\n"); doc.rect(b.x,yy,lw2,sl.length*3.6+1.8,"F"); doc.setTextColor(255); setF(8,"bold"); doc.text(sl,b.x+1.5,yy+3.6);
+    if(b.sig){ const aw=bw-lw2-4, ah=sh-(b.name?6:3); const sc=Math.min(aw/b.sig.w,ah/b.sig.h); const w=b.sig.w*sc,h=b.sig.h*sc; doc.addImage(b.sig.src,"PNG",b.x+lw2+2+(aw-w)/2,yy+1.5+(ah-h)/2,w,h); }
+    if(b.name){ doc.setTextColor(20); setF(7.5); doc.text(doc.splitTextToSize(clean(b.name),bw-lw2-4)[0],b.x+lw2+(bw-lw2)/2,yy+sh-1.6,{align:"center"}); }
+    yy+=sh; lab("DNI:",b.x,yy,lw2); val(b.dni,b.x+lw2,yy,bw-lw2); yy+=rh;
+    lab("Fecha:",b.x,yy,lw2); val(fmtDate(d.fecha),b.x+lw2,yy,bw-lw2);
+  }
+  y+=rh*3+sh+5;
+  // Pie: trazabilidad
+  const now=new Date(); doc.setTextColor(120); setF(7);
+  doc.text(`Registro firmado electrónicamente el ${now.toLocaleDateString("es-ES")} a las ${now.toLocaleTimeString("es-ES",{hour:"2-digit",minute:"2-digit"})} · Lugar de entrega: ${clean(d.hotel)}`,M,Math.min(y,PH-15));
+  const n=doc.getNumberOfPages(); if(n>1) for(let i=1;i<=n;i++){ doc.setPage(i); doc.setTextColor(255); setF(8); doc.text(`Pág. ${i} de ${n}`,M,PH-4); }
+  return {blob:doc.output("blob"),name:fileName(d),doc};
+}
+function download(blob,name){ const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),4000); }
+function blobToBase64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>{ const s=String(r.result||""); const i=s.indexOf(","); res(i>=0?s.slice(i+1):s); }; r.onerror=rej; r.readAsDataURL(blob); }); }
+
+$("btnPdf").onclick=async()=>{ if(!validate())return; const b=$("btnPdf"),t=b.textContent; b.disabled=true; b.textContent="Generando…";
+  try{ const {blob,name}=await makePdf(collect()); download(blob,name); toast("PDF descargado"); }catch(e){ console.error(e); toast("Error: "+(e.message||e),6000); } finally{ b.disabled=false; b.textContent=t; } };
+
+$("btnSend").onclick=async()=>{
+  if(!validate()) return;
+  const d=collect(), n=d.epis.filter(e=>e.ent).length;
+  if(!confirm(`Se enviará el certificado de entrega de ${n} EPI firmado por ${d.trabajador}. ¿Continuar?`)) return;
+  const btn=$("btnSend"), t=btn.textContent; btn.disabled=true; btn.textContent="Enviando…";
+  try{
+    const {blob,name}=await makePdf(d), pdfBase64=await blobToBase64(blob);
+    const payload={pdfBase64,filename:name,trabajador:d.trabajador,dni:d.dni,hotel:d.hotel,fecha:fmtDate(d.fecha),epis:d.epis.filter(e=>e.ent).map(e=>`${e.n} (${e.uds||1} ud.)`),copia:d.copia||""};
+    let res;
+    try{ res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); }
+    catch{ throw new Error("No se pudo conectar con el servidor de correo. Comprueba la conexión e inténtalo de nuevo (si es el primer envío del día puede tardar hasta un minuto)."); }
+    let data=null; try{ data=await res.json(); }catch{}
+    if(res.ok && data && data.ok){ toast("Certificado enviado correctamente"+(d.copia?" (copia a "+d.copia+")":"")+".",6000);
+      if(confirm("Certificado enviado. ¿Empezar un registro nuevo para otra trabajadora? (se mantiene el hotel)")) fresh(true); }
+    else throw new Error((data&&data.error)||("Error del servidor ("+res.status+")"));
+  }catch(e){ console.error(e); toast("No se pudo enviar: "+(e.message||e)+" Puedes usar «Descargar PDF».",8000); }
+  finally{ btn.disabled=false; btn.textContent=t; }
+};
+/* despertar el servidor (plan gratuito) */
+try{ fetch(API_URL.replace(/\/api\/enviar$/,"/"),{mode:"cors"}).catch(()=>{}); }catch{}
+</script>
+</body>
+</html>
