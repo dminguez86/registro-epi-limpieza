@@ -117,7 +117,7 @@ button:disabled{opacity:.6;cursor:default}
 <script src="jspdf.umd.min.js"></script>
 <script>
 /* ---------- Configuración ---------- */
-const API_URL = "https://registro-epi-limpieza-api.onrender.com/api/enviar";
+const SEND_URL = "https://script.google.com/macros/s/AKfycbyVsXzJMV1Rm0alNi2Camv7ZNXXEtA-THHuwpZZYDc_gINorQv0t9zD6xviCwo4cxr7/exec";
 const EMPRESA = "CLUMTEL PREMIUM, SL";
 const PUESTO = "Personal de limpieza";
 const EPIS = [
@@ -301,19 +301,17 @@ $("btnSend").onclick=async()=>{
   const btn=$("btnSend"), t=btn.textContent; btn.disabled=true; btn.textContent="Enviando…";
   try{
     const {blob,name}=await makePdf(d), pdfBase64=await blobToBase64(blob);
-    const payload={pdfBase64,filename:name,trabajador:d.trabajador,dni:d.dni,hotel:d.hotel,fecha:fmtDate(d.fecha),epis:d.epis.filter(e=>e.ent).map(e=>`${e.n} (${e.uds||1} ud.)`),copia:d.copia||""};
+    const payload={clave:"clumtel-epi-2026",pdfBase64,filename:name,trabajador:d.trabajador,dni:d.dni,hotel:d.hotel,fecha:fmtDate(d.fecha),epis:d.epis.filter(e=>e.ent).map(e=>`${e.n} (${e.uds||1} ud.)`),copia:d.copia||""};
     let res;
-    try{ res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}); }
-    catch{ throw new Error("No se pudo conectar con el servidor de correo. Comprueba la conexión e inténtalo de nuevo (si es el primer envío del día puede tardar hasta un minuto)."); }
-    let data=null; try{ data=await res.json(); }catch{}
-    if(res.ok && data && data.ok){ toast("Certificado enviado correctamente"+(d.copia?" (copia a "+d.copia+")":"")+".",6000);
+    try{ res=await fetch(SEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}); }
+    catch{ throw new Error("No se pudo conectar con el servidor de correo. Comprueba la conexión e inténtalo de nuevo."); }
+    let data=null; try{ data=JSON.parse(await res.text()); }catch{}
+    if(data && data.ok){ toast("Certificado enviado correctamente"+(d.copia?" (copia a "+d.copia+")":"")+".",6000);
       if(confirm("Certificado enviado. ¿Empezar un registro nuevo para otra trabajadora? (se mantiene el hotel)")) fresh(true); }
     else throw new Error((data&&data.error)||("Error del servidor ("+res.status+")"));
   }catch(e){ console.error(e); toast("No se pudo enviar: "+(e.message||e)+" Puedes usar «Descargar PDF».",8000); }
   finally{ btn.disabled=false; btn.textContent=t; }
 };
-/* despertar el servidor (plan gratuito) */
-try{ fetch(API_URL.replace(/\/api\/enviar$/,"/"),{mode:"cors"}).catch(()=>{}); }catch{}
 </script>
 </body>
 </html>
