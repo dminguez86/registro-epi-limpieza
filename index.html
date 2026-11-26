@@ -24,7 +24,7 @@ section>h2 small{display:block;text-transform:none;font-weight:400;opacity:.8;le
 @media(max-width:620px){.grid{grid-template-columns:1fr}}
 label.f{display:block;font-size:.8rem;font-weight:600;color:var(--g700)}
 label.f span.req{color:var(--red)}
-input[type=text],input[type=number],input[type=date],input[type=email]{width:100%;margin-top:.2rem;padding:.6rem .7rem;min-height:44px;font:inherit;border:1px solid var(--g300);border-radius:8px;background:#fff;color:var(--g900)}
+input[type=text],input[type=number],input[type=date],input[type=email],select{width:100%;margin-top:.2rem;padding:.6rem .7rem;min-height:44px;font:inherit;border:1px solid var(--g300);border-radius:8px;background:#fff;color:var(--g900)}
 input[readonly]{background:var(--g100);color:var(--g700)}
 input:focus{outline:2px solid var(--cyan);border-color:var(--cyan)}
 .invalid{border-color:var(--red)!important;background:#fff5f5}
@@ -33,9 +33,9 @@ input:focus{outline:2px solid var(--cyan);border-color:var(--cyan)}
 .epi .top{display:flex;gap:.65rem;align-items:flex-start;padding:.7rem;cursor:pointer;font-size:.95rem;font-weight:600}
 .epi .top input{width:24px;height:24px;flex:0 0 24px;margin:0;accent-color:var(--green)}
 .epi .top small{display:block;font-weight:400;color:var(--g500);font-size:.75rem}
-.epi .det{display:none;grid-template-columns:80px 1fr 1fr;gap:.6rem;padding:0 .7rem .7rem}
+.epi .det{display:none;grid-template-columns:80px 1fr;gap:.6rem;padding:0 .7rem .7rem}
 .epi:has(.ent:checked) .det{display:grid}
-@media(max-width:620px){.epi .det{grid-template-columns:1fr 1fr}.epi .det .mot{grid-column:1/-1;order:-1}}
+@media(max-width:620px){.epi .det{grid-template-columns:1fr}.epi .det .mot{grid-column:1/-1}}
 .epi .det label{font-size:.72rem}
 .epis.invalid{outline:2px solid var(--red);border-radius:8px}
 .legal p{margin:0 0 .6rem;font-size:.9rem;color:var(--g700)}
@@ -120,14 +120,15 @@ button:disabled{opacity:.6;cursor:default}
 const SEND_URL = "https://script.google.com/macros/s/AKfycbyVsXzJMV1Rm0alNi2Camv7ZNXXEtA-THHuwpZZYDc_gINorQv0t9zD6xviCwo4cxr7/exec";
 const EMPRESA = "CLUMTEL PREMIUM, SL";
 const PUESTO = "Personal de limpieza";
+const MOTIVOS = ["Nueva incorporación", "Reposición", "Tareas no habituales"];
 const EPIS = [
-  ["Calzado de trabajo antideslizante, (UNE-EN ISO 20347)", "Caídas al mismo nivel (suelos mojados o resbaladizos)"],
-  ["Gafas de protección riesgo químico (UNE-EN 166:2002)", "Salpicaduras de productos químicos"],
-  ["Guantes según especificaciones de la ficha de seguridad de productos químicos (UNE-EN 374-1/2/3)", "Contacto con productos químicos"],
-  ["Mascarilla o máscara con filtro según características de la ficha de seguridad (UNE-EN14387/UNE-EN143)", "Inhalación de productos químicos"],
-  ["Guantes de nitrilo", "Contacto con productos químicos y riesgo biológico"],
-  ["Mascarilla anti-polvo con nivel de protección FFP2.", "Inhalación de polvo"],
-  ["Ropa de protección contra riesgo biológico.", "Riesgo biológico"]
+  "Calzado de trabajo antideslizante, (UNE-EN ISO 20347)",
+  "Gafas de protección riesgo químico (UNE-EN 166:2002)",
+  "Guantes según especificaciones de la ficha de seguridad de productos químicos (UNE-EN 374-1/2/3)",
+  "Mascarilla o máscara con filtro según características de la ficha de seguridad (UNE-EN14387/UNE-EN143)",
+  "Guantes de nitrilo",
+  "Mascarilla anti-polvo con nivel de protección FFP2.",
+  "Ropa de protección contra riesgo biológico."
 ];
 
 /* ---------- Utilidades ---------- */
@@ -139,12 +140,14 @@ const today = () => { const d=new Date(); return new Date(d.getTime()-d.getTimez
 const fmtDate = iso => iso ? iso.split("-").reverse().join("/") : "";
 
 /* ---------- EPI ---------- */
-$("epis").innerHTML = EPIS.map(([n,m],i)=>`<div class="epi">
+$("epis").innerHTML = EPIS.map((n,i)=>`<div class="epi">
   <label class="top"><input type="checkbox" class="ent" id="ent_${i}"><span>${esc(n)}<small>Marca si se entrega</small></span></label>
   <div class="det">
     <label class="f">Uds<input type="number" id="uds_${i}" min="1" max="99" value="1" inputmode="numeric"></label>
-    <label class="f mot">Motivo<input type="text" id="mot_${i}" value="${esc(m)}"></label>
-    <label class="f">Fecha reposición<input type="text" id="rep_${i}" value="Por deterioro" placeholder="dd/mm/aaaa o «Por deterioro»"></label>
+    <label class="f mot">Motivo de entrega <span class="req">*</span><select id="mot_${i}">
+      <option value="">Selecciona el motivo</option>
+      ${MOTIVOS.map(m=>`<option value="${esc(m)}">${esc(m)}</option>`).join("")}
+    </select></label>
   </div></div>`).join("");
 
 /* ---------- Firma en canvas ---------- */
@@ -171,18 +174,18 @@ const TEXT_IDS=["trabajador","dni","fecha","hotel","rep_nombre","rep_dni","copia
 function collect(){
   const d={}; TEXT_IDS.forEach(i=>d[i]=$(i).value.trim());
   d.dni=d.dni.toUpperCase(); d.rep_dni=d.rep_dni.toUpperCase();
-  d.epis=EPIS.map(([n],i)=>({n,ent:$("ent_"+i).checked,uds:$("uds_"+i).value,mot:$("mot_"+i).value.trim(),rep:$("rep_"+i).value.trim()}));
+  d.epis=EPIS.map((n,i)=>({n,ent:$("ent_"+i).checked,uds:$("uds_"+i).value,mot:$("mot_"+i).value}));
   d.sigTrab=pads.trab.empty?null:pads.trab.c.toDataURL("image/png");
   d.sigEmp=pads.emp.empty?null:pads.emp.c.toDataURL("image/png");
   return d;
 }
 function save(){ try{ const d=collect(); delete d.sigTrab; delete d.sigEmp; localStorage.setItem(KEY,JSON.stringify(d)); $("status").textContent="Borrador guardado"; }catch{} }
-function restore(d){ TEXT_IDS.forEach(i=>{ if(d[i]!=null) $(i).value=d[i]; }); (d.epis||[]).forEach((e,i)=>{ if(!$("ent_"+i))return; $("ent_"+i).checked=!!e.ent; $("uds_"+i).value=e.uds||1; $("mot_"+i).value=e.mot??EPIS[i][1]; $("rep_"+i).value=e.rep??"Por deterioro"; }); }
+function restore(d){ TEXT_IDS.forEach(i=>{ if(d[i]!=null) $(i).value=d[i]; }); (d.epis||[]).forEach((e,i)=>{ if(!$("ent_"+i))return; $("ent_"+i).checked=!!e.ent; $("uds_"+i).value=e.uds||1; $("mot_"+i).value=MOTIVOS.includes(e.mot)?e.mot:""; }); }
 let st; $("f").addEventListener("input",()=>{clearTimeout(st);st=setTimeout(save,400)});
 $("f").addEventListener("change",save);
 function fresh(keepHotel){ const hotel=$("hotel").value, rn=$("rep_nombre").value, rd=$("rep_dni").value;
   localStorage.removeItem(KEY); $("f").reset(); Object.values(pads).forEach(p=>p.clear());
-  EPIS.forEach(([n,m],i)=>{ $("ent_"+i).checked=false; $("uds_"+i).value=1; $("mot_"+i).value=m; $("rep_"+i).value="Por deterioro"; });
+  EPIS.forEach((_,i)=>{ $("ent_"+i).checked=false; $("uds_"+i).value=1; $("mot_"+i).value=""; });
   $("fecha").value=today(); if(keepHotel){ $("hotel").value=hotel; $("rep_nombre").value=rn; $("rep_dni").value=rd; save(); } $("status").textContent=""; document.querySelectorAll(".invalid").forEach(x=>x.classList.remove("invalid")); window.scrollTo(0,0); }
 $("nuevo").onclick=()=>{ if(confirm("¿Empezar un nuevo registro? Se borrarán los datos actuales.")) fresh(false); };
 try{ const s=localStorage.getItem(KEY); if(s) restore(JSON.parse(s)); }catch{}
@@ -193,11 +196,12 @@ function validate(){
   let first=null; const mark=(el,bad)=>{ el.classList.toggle("invalid",bad); if(bad&&!first) first=el; };
   ["trabajador","dni","fecha","hotel"].forEach(i=>mark($(i),!$(i).value.trim()));
   const any=EPIS.some((_,i)=>$("ent_"+i).checked); mark($("epis"),!any);
-  EPIS.forEach((_,i)=>{ const u=$("uds_"+i); mark(u,$("ent_"+i).checked && !(+u.value>=1)); });
+  const faltaMotivo=EPIS.some((_,i)=>$("ent_"+i).checked && !MOTIVOS.includes($("mot_"+i).value));
+  EPIS.forEach((_,i)=>{ const on=$("ent_"+i).checked; const u=$("uds_"+i); mark(u,on && !(+u.value>=1)); const m=$("mot_"+i); mark(m,on && !MOTIVOS.includes(m.value)); });
   mark(pads.trab.c,pads.trab.empty);
   const cp=$("copia"); mark(cp,!!cp.value.trim() && !cp.checkValidity());
   if(first){ first.scrollIntoView({behavior:"smooth",block:"center"});
-    toast(!any?"Marca al menos un equipo como entregado.":pads.trab.empty&&first===pads.trab.c?"Falta la firma del trabajador/a.":"Revisa los campos marcados en rojo."); return false; }
+    toast(!any?"Marca al menos un equipo como entregado.":pads.trab.empty&&first===pads.trab.c?"Falta la firma del trabajador/a.":faltaMotivo?"Indica el motivo de entrega de cada EPI marcado.":"Revisa los campos marcados en rojo."); return false; }
   return true;
 }
 
@@ -247,14 +251,14 @@ async function makePdf(d){
   const p17="Según lo establecido en el Art. 17 de la Ley de prevención de riesgos laborales, la empresa entrega al trabajador arriba mencionado los siguientes equipos de protección individual, para su uso individual en las actividades que desempeña en su puesto de trabajo:";
   doc.text(p17,M+3,y,{maxWidth:W-6,align:"justify",lineHeightFactor:1.55}); y+=doc.splitTextToSize(p17,W-6).length*9*0.3528*1.55+1;
   // Tabla de EPI
-  const cols=[["EPI",W*0.44],["Motivo",W*0.25],["Fecha reposición",W*0.19],["Uds",W*0.12]];
+  const cols=[["EPI",W*0.56],["Uds",W*0.10],["Motivo de entrega",W*0.34]];
   doc.setFillColor(...CY); doc.rect(M,y,W,5.5,"F"); doc.setTextColor(255); setF(8,"bold"); doc.text("EPIS ENTREGADOS AL TRABAJADOR",M+1.5,y+3.9); y+=5.5;
   doc.setFillColor(...CY); doc.rect(M,y,W,5.5,"F"); setF(7.6); let x=M;
   cols.forEach(([t,w],i)=>{ doc.text(t,i===0?x+1.5:x+w/2,y+3.8,{align:i===0?"left":"center"}); if(i) {doc.setDrawColor(255);doc.line(x,y,x,y+5.5);} x+=w; }); y+=5.5;
   const rows=d.epis.filter(e=>e.ent);
   setF(8.4); doc.setTextColor(20);
   for(const e of rows){
-    const cells=[doc.splitTextToSize(clean(e.n),cols[0][1]-3),doc.splitTextToSize(clean(e.mot),cols[1][1]-3),doc.splitTextToSize(clean(e.rep),cols[2][1]-3),[String(e.uds||1)]];
+    const cells=[doc.splitTextToSize(clean(e.n),cols[0][1]-3),[String(e.uds||1)],doc.splitTextToSize(clean(e.mot),cols[2][1]-3)];
     const h=Math.max(6.2,Math.max(...cells.map(c=>c.length))*3.6+2.6);
     if(y+h>PH-110){ doc.addPage(); frame(); y=26; setF(8.4); doc.setTextColor(20); }
     x=M; cells.forEach((c,i)=>{ const w=cols[i][1]; box(x,y,w,h); doc.text(c,i===0?x+1.5:x+w/2,y+(h-c.length*3.6)/2+2.7,{align:i===0?"left":"center",lineHeightFactor:1.2}); x+=w; });
@@ -301,7 +305,7 @@ $("btnSend").onclick=async()=>{
   const btn=$("btnSend"), t=btn.textContent; btn.disabled=true; btn.textContent="Enviando…";
   try{
     const {blob,name}=await makePdf(d), pdfBase64=await blobToBase64(blob);
-    const payload={clave:"clumtel-epi-2026",pdfBase64,filename:name,trabajador:d.trabajador,dni:d.dni,hotel:d.hotel,fecha:fmtDate(d.fecha),epis:d.epis.filter(e=>e.ent).map(e=>`${e.n} (${e.uds||1} ud.)`),copia:d.copia||""};
+    const payload={clave:"clumtel-epi-2026",pdfBase64,filename:name,trabajador:d.trabajador,dni:d.dni,hotel:d.hotel,fecha:fmtDate(d.fecha),epis:d.epis.filter(e=>e.ent).map(e=>`${e.n} (${e.uds||1} ud.) – ${e.mot}`),copia:d.copia||""};
     let res;
     try{ res=await fetch(SEND_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)}); }
     catch{ throw new Error("No se pudo conectar con el servidor de correo. Comprueba la conexión e inténtalo de nuevo."); }
